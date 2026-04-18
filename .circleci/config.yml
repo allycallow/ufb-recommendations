@@ -56,23 +56,6 @@ jobs:
           repo: production-ufb-recommendations
           tag: ${CIRCLE_SHA1},latest
           platform: "linux/arm64"
-  deploy:
-    docker:
-      - image: cimg/aws:2025.01
-    steps:
-      - checkout
-      - aws-cli/setup:
-          role_arn: "arn:aws:iam::081077757258:role/openid-connect-circleci"
-          region: eu-west-2
-          profile_name: "OIDC-PROFILE"
-          role_session_name: "example-session"
-          session_duration: "1800"
-      - aws-ecs/update_service:
-          cluster: production-ufb
-          family: production-ufb-recommendations
-          container_image_name_updates: "container=recommendations,tag=latest"
-          force_new_deployment: true
-          region: eu-west-2
 
 workflows:
   build-and-deploy:
@@ -81,6 +64,16 @@ workflows:
       - build:
           requires:
             - test
-      - deploy:
+      - aws-ecs/deploy_service_update:
           requires:
             - build
+          auth:
+            - aws-cli/setup:
+                profile_name: OIDC-USER
+                role_arn: arn:aws:iam::123456789012:role/VALID_OIDC_ECS_ROLE
+          cluster: production-ufb
+          family: production-ufb-recommendations
+          container_image_name_updates: "container=recommendations,tag=latest"
+          force_new_deployment: true
+          region: eu-west-2
+          profile_name: OIDC-USER
