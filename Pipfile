@@ -25,10 +25,10 @@ mypy = "*"
 
 
 [scripts]
-lint = "flake8 app"
-format = "black app"
-sort = "isort app"
-mypy = "mypy app"
+lint = "flake8 ."
+format = "black ."
+sort = "isort ."
+mypy = "mypy ."
 tests = "pytest"
 
 [requires]
