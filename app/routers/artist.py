@@ -3,7 +3,6 @@ from fastapi import APIRouter, Depends
 from app.auth import verify_api_key
 from app.utils import logger
 
-
 router = APIRouter(dependencies=[Depends(verify_api_key)])
 
 
