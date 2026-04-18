@@ -1,0 +1,35 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = "*"
+loguru = "*"
+boto3 = "*"
+types-boto3 = "*"
+requests = "*"
+sentry-sdk = "*"
+logtail-python = "*"
+pytest = "*"
+pytest-asyncio = "*"
+types-requests = "*"
+pytest-env = "*"
+
+[dev-packages]
+flake8 = "*"
+black = "*"
+isort = "*"
+mypy = "*"
+
+
+[scripts]
+lint = "flake8 app"
+format = "black app"
+sort = "isort app"
+mypy = "mypy app"
+tests = "pytest"
+
+[requires]
+python_version = "3.13"
