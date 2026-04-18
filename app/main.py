@@ -4,7 +4,7 @@ import sentry_sdk
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from .routers import artist_router, label_router, release_router, user_router
+from app.routers import artist_router, label_router, release_router, user_router
 
 SENTRY_DSN = getenv("SENTRY_DSN", None)
 STAGE = getenv("STAGE", "local")
