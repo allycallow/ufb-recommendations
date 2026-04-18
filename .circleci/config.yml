@@ -53,15 +53,15 @@ jobs:
           dockerfile: Dockerfile
           path: .
           region: eu-west-2
-          repo: production-ufb-search
+          repo: production-ufb-recommendations
           tag: ${CIRCLE_SHA1},latest
           platform: "linux/arm64"
-      - aws-ecs/update_service:
-          cluster: production-ufb
-          family: production-ufb-search
-          container_image_name_updates: "container=search,tag=${CIRCLE_SHA1}"
-          force_new_deployment: false
-          region: eu-west-2
+      # - aws-ecs/update_service:
+      #     cluster: production-ufb
+      #     family: production-ufb-search
+      #     container_image_name_updates: "container=search,tag=${CIRCLE_SHA1}"
+      #     force_new_deployment: false
+      #     region: eu-west-2
 
 workflows:
   deploy:
