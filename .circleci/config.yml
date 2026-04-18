@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@5.4
   aws-ecr: circleci/aws-ecr@9.8.1
-  aws-ecs: circleci/aws-ecs@7.2.2
+  # aws-ecs: circleci/aws-ecs@7.2.2
 
 jobs:
   test:
@@ -33,8 +33,10 @@ jobs:
       #     command: pipenv run tests
 
   build-deploy:
-    docker:
-      - image: cimg/aws:2025.01
+    machine:
+      image: ubuntu-2204:2024.01.1
+      docker_layer_caching: true
+    resource_class: arm.medium
     steps:
       - checkout
       - aws-cli/setup:
@@ -43,8 +45,6 @@ jobs:
           profile_name: "OIDC-PROFILE"
           role_session_name: "example-session"
           session_duration: "1800"
-      - setup_remote_docker:
-          docker_layer_caching: true
       - aws-ecr/build_and_push_image:
           account_id: "081077757258"
           auth:
