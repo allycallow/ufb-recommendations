@@ -3,6 +3,7 @@ from os import getenv
 import sentry_sdk
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+from .routers import label_router, artist_router, user_router, release_router
 
 SENTRY_DSN = getenv("SENTRY_DSN", None)
 STAGE = getenv("STAGE", "local")
@@ -32,3 +33,9 @@ async def root():
 @app.get("/sentry-debug")
 async def trigger_error():
     raise Exception("This is a test exception for Sentry debugging")
+
+
+app.include_router(label_router, prefix="/labels", tags=["labels"])
+app.include_router(artist_router, prefix="/artists", tags=["artists"])
+app.include_router(user_router, prefix="/users", tags=["users"])
+app.include_router(release_router, prefix="/releases", tags=["releases"])
