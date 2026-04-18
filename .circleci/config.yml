@@ -59,7 +59,7 @@ jobs:
       - aws-ecs/update_service:
           cluster: production-ufb
           family: production-ufb-recommendations
-          container_image_name_updates: "container=recommendations,tag=${CIRCLE_SHA1}"
+          container_image_name_updates: "container=recommendations,tag=latest"
           force_new_deployment: false
           region: eu-west-2
 
