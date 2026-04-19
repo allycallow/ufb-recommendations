@@ -30,6 +30,12 @@ async def get_user_explore(user_id: str):
     logger.info(f"Getting explore recommendations for user {user_id}")
     recommendations = db.get_explore(user_id)
 
+    if len(recommendations) == 0:
+        return {
+            "success": True,
+            "items": [],
+        }
+
     return {
         "success": True,
         "items": format_recommendation(recommendations),
@@ -44,6 +50,11 @@ async def get_user_explore(user_id: str):
 async def get_user_recommendations(user_id: str):
     logger.info(f"Getting recommendations for user {user_id}")
     recommendations = db.get_recommendations(user_id)
+    if len(recommendations) == 0:
+        return {
+            "success": True,
+            "items": [],
+        }
     return {
         "success": True,
         "items": format_recommendation(recommendations),
@@ -58,6 +69,11 @@ async def get_user_recommendations(user_id: str):
 async def get_user_more_like_release(user_id: str):
     logger.info(f"Getting more like this release recommendations for user {user_id}")
     recommendations = db.get_more_like_release(user_id)
+    if len(recommendations) == 0:
+        return {
+            "success": True,
+            "items": [],
+        }
     items = recommendations[0]["items"]
     return {
         "success": True,
@@ -73,6 +89,11 @@ async def get_user_more_like_release(user_id: str):
 async def get_user_more_like_artist(user_id: str):
     logger.info(f"Getting more like this artist recommendations for user {user_id}")
     recommendations = db.get_more_like_artist(user_id)
+    if len(recommendations) == 0:
+        return {
+            "success": True,
+            "items": [],
+        }
     items = recommendations[0]["items"]
     return {
         "success": True,

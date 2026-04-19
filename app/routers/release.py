@@ -15,6 +15,11 @@ router = APIRouter(dependencies=[Depends(verify_api_key)])
 async def get_release_recommendations(release_id: str):
     logger.info(f"Getting recommendations for release {release_id}")
     recommendations = db.get_release_recommendations(release_id)
+    if len(recommendations) == 0:
+        return {
+            "success": True,
+            "items": [],
+        }
     items = recommendations[0]["items"]["SS"]
     return {
         "success": True,
