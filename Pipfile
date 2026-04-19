@@ -28,7 +28,7 @@ mypy = "*"
 lint = "flake8 ."
 format = "black ."
 sort = "isort ."
-mypy = "mypy ."
+type_check = "mypy ."
 tests = "pytest"
 
 [requires]

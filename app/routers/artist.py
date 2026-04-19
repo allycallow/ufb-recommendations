@@ -1,8 +1,8 @@
-import app.db as db
 from fastapi import APIRouter, Depends
+
+import app.db as db
 from app.auth import verify_api_key
 from app.utils import logger
-
 
 router = APIRouter(dependencies=[Depends(verify_api_key)])
 
