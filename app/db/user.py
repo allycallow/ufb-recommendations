@@ -11,7 +11,7 @@ def get_recommendations(user_id: str):
         KeyConditionExpression="#pk = :pk And begins_with(#sk, :sk)",
         ExpressionAttributeValues={
             ":pk": {"S": f"USER#{user_id}"},
-            ":sk": {"S": f"RECOMMENDATION#"},
+            ":sk": {"S": "RECOMMENDATION#"},
         },
         ExpressionAttributeNames={
             "#pk": "PK",
@@ -28,7 +28,7 @@ def get_more_like_artist(user_id: str):
         KeyConditionExpression="#pk = :pk And begins_with(#sk, :sk)",
         ExpressionAttributeValues={
             ":pk": {"S": f"USER#{user_id}"},
-            ":sk": {"S": f"MORE_LIKE_ARTIST#"},
+            ":sk": {"S": "MORE_LIKE_ARTIST#"},
         },
         ExpressionAttributeNames={
             "#pk": "PK",
@@ -45,7 +45,7 @@ def get_more_like_release(user_id: str):
         KeyConditionExpression="#pk = :pk And begins_with(#sk, :sk)",
         ExpressionAttributeValues={
             ":pk": {"S": f"USER#{user_id}"},
-            ":sk": {"S": f"MORE_LIKE_RELEASE#"},
+            ":sk": {"S": "MORE_LIKE_RELEASE#"},
         },
         ExpressionAttributeNames={
             "#pk": "PK",
@@ -62,7 +62,7 @@ def get_explore(user_id: str):
         KeyConditionExpression="#pk = :pk And begins_with(#sk, :sk)",
         ExpressionAttributeValues={
             ":pk": {"S": f"USER#{user_id}"},
-            ":sk": {"S": f"RECOMMENDATION#"},
+            ":sk": {"S": "RECOMMENDATION#"},
         },
         ExpressionAttributeNames={
             "#pk": "PK",

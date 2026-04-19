@@ -11,7 +11,7 @@ def get_label_related_artists(label_id: str):
         KeyConditionExpression="#pk = :pk And begins_with(#sk, :sk)",
         ExpressionAttributeValues={
             ":pk": {"S": f"LABEL#{label_id}"},
-            ":sk": {"S": f"RELATED_ARTISTS#"},
+            ":sk": {"S": "RELATED_ARTISTS#"},
         },
         ExpressionAttributeNames={
             "#pk": "PK",

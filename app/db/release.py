@@ -11,7 +11,7 @@ def get_release_recommendations(release_id: str):
         KeyConditionExpression="#pk = :pk And begins_with(#sk, :sk)",
         ExpressionAttributeValues={
             ":pk": {"S": f"RELEASE#{release_id}"},
-            ":sk": {"S": f"RECOMMENDATIONS#"},
+            ":sk": {"S": "RECOMMENDATIONS#"},
         },
         ExpressionAttributeNames={
             "#pk": "PK",
