@@ -2,6 +2,12 @@ from fastapi import APIRouter, Depends
 
 import app.db as db
 from app.auth import verify_api_key
+from app.schemas import (
+    MoreLikeArtistResponse,
+    MoreLikeReleaseResponse,
+    RecommendationListResponse,
+    TypedListResponse,
+)
 from app.utils import logger
 
 router = APIRouter(dependencies=[Depends(verify_api_key)])
@@ -25,6 +31,7 @@ def format_recommendation(recommendations):
     "/{user_id}/explore",
     description="Get explore recommendations for a user",
     tags=["users"],
+    response_model=RecommendationListResponse,
 )
 async def get_user_explore(user_id: str):
     logger.info(f"Getting explore recommendations for user {user_id}")
@@ -46,6 +53,7 @@ async def get_user_explore(user_id: str):
     "/{user_id}/recommendations",
     description="Get recommendations for a user",
     tags=["users"],
+    response_model=RecommendationListResponse,
 )
 async def get_user_recommendations(user_id: str):
     logger.info(f"Getting recommendations for user {user_id}")
@@ -65,6 +73,7 @@ async def get_user_recommendations(user_id: str):
     "/{user_id}/more-like-release",
     description="Get more like this release recommendations for a user",
     tags=["users"],
+    response_model=MoreLikeReleaseResponse,
 )
 async def get_user_more_like_release(user_id: str):
     logger.info(f"Getting more like this release recommendations for user {user_id}")
@@ -85,6 +94,7 @@ async def get_user_more_like_release(user_id: str):
     "/{user_id}/more-like-artist",
     description="Get more like this artist recommendations for a user",
     tags=["users"],
+    response_model=MoreLikeArtistResponse,
 )
 async def get_user_more_like_artist(user_id: str):
     logger.info(f"Getting more like this artist recommendations for user {user_id}")
@@ -105,6 +115,7 @@ async def get_user_more_like_artist(user_id: str):
     "/{user_id}/top-picks",
     description="Get top picks recommendations for a user",
     tags=["users"],
+    response_model=TypedListResponse,
 )
 async def get_user_top_picks(user_id: str):
     logger.info(f"Getting top picks recommendations for user {user_id}")

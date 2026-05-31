@@ -37,10 +37,17 @@ def test_explore_empty(client, auth_headers):
     assert response.json() == {"success": True, "items": []}
 
 
+RECOMMENDATION_ITEM = {
+    "title": "Top Picks",
+    "items": [{"id": "Release:abc"}, {"id": "Release:xyz"}],
+    "meta": {"types": ["RELEASE"], "next_update_date": "2024-02-02"},
+}
+
+
 def test_explore_with_data(client, auth_headers):
     mock_data = [
-        {"PK": f"USER#{USER_ID}", "SK": "RECOMMENDATION#release:abc", "is_hero": 1},
-        {"PK": f"USER#{USER_ID}", "SK": "RECOMMENDATION#release:xyz", "is_hero": 0},
+        {"PK": f"USER#{USER_ID}", "SK": "RECOMMENDATION#release:abc", "is_hero": 1, **RECOMMENDATION_ITEM},
+        {"PK": f"USER#{USER_ID}", "SK": "RECOMMENDATION#release:xyz", "is_hero": 0, **RECOMMENDATION_ITEM},
     ]
     with patch("app.db.get_explore", return_value=mock_data):
         response = client.get(f"{BASE_URL}/explore", headers=auth_headers)
@@ -64,7 +71,7 @@ def test_recommendations_empty(client, auth_headers):
 
 def test_recommendations_with_data(client, auth_headers):
     mock_data = [
-        {"PK": f"USER#{USER_ID}", "SK": "RECOMMENDATION#artist:abc", "is_hero": 0},
+        {"PK": f"USER#{USER_ID}", "SK": "RECOMMENDATION#artist:abc", "is_hero": 0, **RECOMMENDATION_ITEM},
     ]
     with patch("app.db.get_recommendations", return_value=mock_data):
         response = client.get(f"{BASE_URL}/recommendations", headers=auth_headers)
@@ -83,7 +90,10 @@ def test_more_like_release_empty(client, auth_headers):
 
 
 def test_more_like_release_with_data(client, auth_headers):
-    items = [{"id": "release:abc"}, {"id": "release:xyz"}]
+    items = [
+        {"release_id": "release:abc", "recommendations": ["release:1", "release:2"]},
+        {"release_id": "release:xyz", "recommendations": ["release:3"]},
+    ]
     mock_data = [{"items": items}]
     with patch("app.db.get_more_like_release", return_value=mock_data):
         response = client.get(f"{BASE_URL}/more-like-release", headers=auth_headers)
@@ -102,7 +112,10 @@ def test_more_like_artist_empty(client, auth_headers):
 
 
 def test_more_like_artist_with_data(client, auth_headers):
-    items = [{"id": "artist:abc"}, {"id": "artist:xyz"}]
+    items = [
+        {"artist_id": "artist:abc", "recommendations": ["release:1", "release:2"]},
+        {"artist_id": "artist:xyz", "recommendations": ["release:3"]},
+    ]
     mock_data = [{"items": items}]
     with patch("app.db.get_more_like_artist", return_value=mock_data):
         response = client.get(f"{BASE_URL}/more-like-artist", headers=auth_headers)
@@ -121,7 +134,7 @@ def test_top_picks_empty(client, auth_headers):
 
 
 def test_top_picks_with_data(client, auth_headers):
-    items = [{"id": "release:abc"}, {"id": "release:xyz"}]
+    items = [{"type": "release", "id": "release:abc"}, {"type": "release", "id": "release:xyz"}]
     mock_data = [{"items": items}]
     with patch("app.db.get_top_picks", return_value=mock_data):
         response = client.get(f"{BASE_URL}/top-picks", headers=auth_headers)

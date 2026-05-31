@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 
 import app.db as db
 from app.auth import verify_api_key
+from app.schemas import StringListResponse
 from app.utils import logger
 
 router = APIRouter(dependencies=[Depends(verify_api_key)])
@@ -11,6 +12,7 @@ router = APIRouter(dependencies=[Depends(verify_api_key)])
     "/{artist_id}/related-artists",
     description="Get related artists for an artist",
     tags=["artists"],
+    response_model=StringListResponse,
 )
 async def get_artist_related_artists(artist_id: str):
     logger.info(f"Getting related artists for artist {artist_id}")
@@ -18,7 +20,7 @@ async def get_artist_related_artists(artist_id: str):
     if len(related_artists) == 0:
         return {
             "success": True,
-            "message": [],
+            "items": [],
         }
     items = related_artists[0]["items"]
     return {

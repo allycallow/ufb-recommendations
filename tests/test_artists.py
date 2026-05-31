@@ -24,8 +24,7 @@ def test_related_artists_empty(client, auth_headers):
         response = client.get(f"{BASE_URL}/related-artists", headers=auth_headers)
         mock_db.assert_called_once_with(ARTIST_ID)
     assert response.status_code == 200
-    # empty path returns "message" key (not "items") — matches router behaviour
-    assert response.json() == {"success": True, "message": []}
+    assert response.json() == {"success": True, "items": []}
 
 
 def test_related_artists_with_data(client, auth_headers):

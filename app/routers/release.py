@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 
 import app.db as db
 from app.auth import verify_api_key
+from app.schemas import StringListResponse
 from app.utils import logger
 
 router = APIRouter(dependencies=[Depends(verify_api_key)])
@@ -11,6 +12,7 @@ router = APIRouter(dependencies=[Depends(verify_api_key)])
     "/{release_id}/recommendations",
     description="Get recommendations for a release",
     tags=["releases"],
+    response_model=StringListResponse,
 )
 async def get_release_recommendations(release_id: str):
     logger.info(f"Getting recommendations for release {release_id}")
