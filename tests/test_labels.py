@@ -10,7 +10,9 @@ def test_missing_api_key_returns_403(client):
 
 
 def test_invalid_api_key_returns_401(client):
-    response = client.get(f"{BASE_URL}/related-artists", headers={"X-API-Key": "wrong-key"})
+    response = client.get(
+        f"{BASE_URL}/related-artists", headers={"X-API-Key": "wrong-key"}
+    )
     assert response.status_code == 401
     data = response.json()
     assert data["success"] is False
