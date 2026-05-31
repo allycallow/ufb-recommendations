@@ -46,8 +46,18 @@ RECOMMENDATION_ITEM = {
 
 def test_explore_with_data(client, auth_headers):
     mock_data = [
-        {"PK": f"USER#{USER_ID}", "SK": "RECOMMENDATION#release:abc", "is_hero": 1, **RECOMMENDATION_ITEM},
-        {"PK": f"USER#{USER_ID}", "SK": "RECOMMENDATION#release:xyz", "is_hero": 0, **RECOMMENDATION_ITEM},
+        {
+            "PK": f"USER#{USER_ID}",
+            "SK": "RECOMMENDATION#release:abc",
+            "is_hero": 1,
+            **RECOMMENDATION_ITEM,
+        },
+        {
+            "PK": f"USER#{USER_ID}",
+            "SK": "RECOMMENDATION#release:xyz",
+            "is_hero": 0,
+            **RECOMMENDATION_ITEM,
+        },
     ]
     with patch("app.db.get_explore", return_value=mock_data):
         response = client.get(f"{BASE_URL}/explore", headers=auth_headers)
@@ -71,7 +81,12 @@ def test_recommendations_empty(client, auth_headers):
 
 def test_recommendations_with_data(client, auth_headers):
     mock_data = [
-        {"PK": f"USER#{USER_ID}", "SK": "RECOMMENDATION#artist:abc", "is_hero": 0, **RECOMMENDATION_ITEM},
+        {
+            "PK": f"USER#{USER_ID}",
+            "SK": "RECOMMENDATION#artist:abc",
+            "is_hero": 0,
+            **RECOMMENDATION_ITEM,
+        },
     ]
     with patch("app.db.get_recommendations", return_value=mock_data):
         response = client.get(f"{BASE_URL}/recommendations", headers=auth_headers)
@@ -134,7 +149,10 @@ def test_top_picks_empty(client, auth_headers):
 
 
 def test_top_picks_with_data(client, auth_headers):
-    items = [{"type": "release", "id": "release:abc"}, {"type": "release", "id": "release:xyz"}]
+    items = [
+        {"type": "release", "id": "release:abc"},
+        {"type": "release", "id": "release:xyz"},
+    ]
     mock_data = [{"items": items}]
     with patch("app.db.get_top_picks", return_value=mock_data):
         response = client.get(f"{BASE_URL}/top-picks", headers=auth_headers)
