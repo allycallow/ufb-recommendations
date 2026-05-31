@@ -3,6 +3,7 @@ from os import getenv
 import sentry_sdk
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.routers import artist_router, label_router, release_router, user_router
 
@@ -40,3 +41,5 @@ app.include_router(label_router, prefix="/labels", tags=["labels"])
 app.include_router(artist_router, prefix="/artists", tags=["artists"])
 app.include_router(user_router, prefix="/users", tags=["users"])
 app.include_router(release_router, prefix="/releases", tags=["releases"])
+
+Instrumentator().instrument(app).expose(app)

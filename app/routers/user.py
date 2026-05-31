@@ -99,3 +99,23 @@ async def get_user_more_like_artist(user_id: str):
         "success": True,
         "items": items,
     }
+
+
+@router.get(
+    "/{user_id}/top-picks",
+    description="Get top picks recommendations for a user",
+    tags=["users"],
+)
+async def get_user_top_picks(user_id: str):
+    logger.info(f"Getting top picks recommendations for user {user_id}")
+    recommendations = db.get_top_picks(user_id)
+    if len(recommendations) == 0:
+        return {
+            "success": True,
+            "items": [],
+        }
+    items = recommendations[0]["items"]
+    return {
+        "success": True,
+        "items": items,
+    }
