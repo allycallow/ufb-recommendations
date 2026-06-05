@@ -29,19 +29,21 @@ app = FastAPI()
 # --- OpenTelemetry Initialization ---
 def initialize_tracing(fastapi_app: FastAPI):
     try:
-        # Service name identifier for the Jaeger UI dropdown
+        # Service name as it will appear inside the Jaeger UI dropdown
         resource = Resource.create(
-            attributes={"service.recommendations": "fastapi-microservice"}
+            attributes={"service.search": "fastapi-microservice"}
         )
         provider = TracerProvider(resource=resource)
 
-        # Uses standard gRPC collector protocol; reads OTEL_EXPORTER_OTLP_ENDPOINT from ECS env
+        # Reads target Jaeger gRPC endpoint from environment variables (e.g., OTEL_EXPORTER_OTLP_ENDPOINT)
         processor = BatchSpanProcessor(OTLPSpanExporter())
         provider.add_span_processor(processor)
         trace.set_tracer_provider(provider)
 
-        # Instrument FastAPI (Extracts the trace context from incoming Django HTTP headers)
-        FastAPIInstrumentor.instrument_app(fastapi_app)
+        # Instrument FastAPI (extracts trace context from inbound Django headers automatically)
+        FastAPIInstrumentor.instrument_app(
+            fastapi_app, excluded_urls="metrics,sentry-debug"
+        )
         print("OpenTelemetry tracing successfully initialized for FastAPI.")
     except Exception as e:
         print(f"Failed to initialize OpenTelemetry tracing: {e}")
