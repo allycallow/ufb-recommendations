@@ -16,8 +16,7 @@ router = APIRouter(dependencies=[Depends(verify_api_key)])
 )
 async def get_trending_tracks():
     logger.info("Getting trending tracks")
-    tracks = db.get_trending_tracks()
-    items = [track["id"] for track in tracks]
+    items = db.get_trending_tracks()
     return {
         "success": True,
         "items": items,

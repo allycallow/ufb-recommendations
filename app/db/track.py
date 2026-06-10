@@ -3,18 +3,15 @@ from app.db.utils import deserialize_dynamodb_item, dynamodb
 
 
 def get_trending_tracks():
-    response = dynamodb.query(
+    response = dynamodb.get_item(
         TableName=TABLE_NAME,
-        KeyConditionExpression="#pk = :pk And begins_with(#sk, :sk)",
-        ExpressionAttributeValues={
-            ":pk": {"S": "TRENDING#"},
-            ":sk": {"S": "TRACK#"},
+        Key={
+            "PK": {"S": "TRENDING#TRACKS"},
+            "SK": {"S": "LATEST"},
         },
-        ExpressionAttributeNames={
-            "#pk": "PK",
-            "#sk": "SK",
-        },
-        ScanIndexForward=False,
     )
-    items = response.get("Items", [])
-    return [deserialize_dynamodb_item(item) for item in items]
+    item = response.get("Item")
+    if not item:
+        return []
+    deserialized = deserialize_dynamodb_item(item)
+    return deserialized.get("items", [])
