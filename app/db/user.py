@@ -1,9 +1,5 @@
-import boto3
-
 from app.db.consts import TABLE_NAME
-from app.db.utils import deserialize_dynamodb_item
-
-dynamodb = boto3.client("dynamodb", region_name="eu-west-2")
+from app.db.utils import deserialize_dynamodb_item, dynamodb
 
 
 def get_recommendations(user_id: str):

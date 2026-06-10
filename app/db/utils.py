@@ -1,4 +1,7 @@
+import boto3
 from boto3.dynamodb.types import TypeDeserializer
+
+dynamodb = boto3.client("dynamodb", region_name="eu-west-2")
 
 
 def deserialize_dynamodb_item(item):
