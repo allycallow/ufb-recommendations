@@ -16,13 +16,7 @@ router = APIRouter(dependencies=[Depends(verify_api_key)])
 )
 async def get_label_related_artists(label_id: str):
     logger.info(f"Getting related artists for label {label_id}")
-    related_artists = db.get_label_related_artists(label_id)
-    if len(related_artists) == 0:
-        return {
-            "success": True,
-            "items": [],
-        }
-    items = related_artists[0]["items"]
+    items = db.get_label_related_artists(label_id)
     return {
         "success": True,
         "items": list(map(lambda x: x["id"], items)),

@@ -29,8 +29,7 @@ def test_related_artists_empty(client, auth_headers):
 
 
 def test_related_artists_with_data(client, auth_headers):
-    items = [{"id": "artist:abc"}, {"id": "artist:xyz"}]
-    mock_data = [{"items": items}]
+    mock_data = [{"id": "artist:abc"}, {"id": "artist:xyz"}]
     with patch("app.db.get_artist_related_artists", return_value=mock_data) as mock_db:
         response = client.get(f"{BASE_URL}/related-artists", headers=auth_headers)
         mock_db.assert_called_once_with(ARTIST_ID)

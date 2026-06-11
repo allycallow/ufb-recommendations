@@ -3,17 +3,15 @@ from app.db.utils import deserialize_dynamodb_item, dynamodb
 
 
 def get_label_related_artists(label_id: str):
-    response = dynamodb.query(
+    response = dynamodb.get_item(
         TableName=TABLE_NAME,
-        KeyConditionExpression="#pk = :pk And begins_with(#sk, :sk)",
-        ExpressionAttributeValues={
-            ":pk": {"S": f"LABEL#{label_id}"},
-            ":sk": {"S": "RELATED_ARTISTS#"},
-        },
-        ExpressionAttributeNames={
-            "#pk": "PK",
-            "#sk": "SK",
+        Key={
+            "PK": {"S": f"LABEL#{label_id}"},
+            "SK": {"S": f"RELATED_ARTISTS#{label_id}"},
         },
     )
-    items = response.get("Items", [])
-    return [deserialize_dynamodb_item(item) for item in items]
+    item = response.get("Item")
+    if not item:
+        return []
+    deserialized = deserialize_dynamodb_item(item)
+    return deserialized.get("items", [])
