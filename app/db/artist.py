@@ -17,3 +17,18 @@ def get_artist_related_artists(artist_id: str):
     )
     items = response.get("Items", [])
     return [deserialize_dynamodb_item(item) for item in items]
+
+
+def get_trending_artists():
+    response = dynamodb.get_item(
+        TableName=TABLE_NAME,
+        Key={
+            "PK": {"S": "TRENDING#ARTISTS"},
+            "SK": {"S": "LATEST"},
+        },
+    )
+    item = response.get("Item")
+    if not item:
+        return []
+    deserialized = deserialize_dynamodb_item(item)
+    return deserialized.get("items", [])

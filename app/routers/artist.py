@@ -27,3 +27,18 @@ async def get_artist_related_artists(artist_id: str):
         "success": True,
         "items": list(map(lambda x: x["id"], items)),
     }
+
+
+@router.get(
+    "/trending",
+    description="Get trending artists",
+    tags=["artists"],
+    response_model=StringListResponse,
+)
+async def get_trending_artists():
+    logger.info("Getting trending tracks")
+    items = db.get_trending_artists()
+    return {
+        "success": True,
+        "items": items,
+    }
