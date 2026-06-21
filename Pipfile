@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-fastapi = "*"
+fastapi = "<0.116.0"
 uvicorn = "*"
 loguru = "*"
 boto3 = "*"
@@ -27,7 +27,8 @@ flake8 = "*"
 black = "*"
 isort = "*"
 mypy = "*"
-httpx2 = "*"
+httpx = "*"
+pre-commit = "*"
 
 [scripts]
 lint = "flake8 ."
