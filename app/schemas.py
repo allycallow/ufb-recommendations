@@ -62,3 +62,11 @@ class MoreLikeReleaseItem(BaseModel):
 class MoreLikeReleaseResponse(BaseModel):
     success: bool
     items: list[MoreLikeReleaseItem]
+
+
+class PaginatedStringListResponse(BaseModel):
+    success: bool
+    items: list[str]
+    page: int
+    page_size: int
+    total: int

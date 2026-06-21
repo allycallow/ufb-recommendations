@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 import app.db as db
 from app.auth import verify_api_key
-from app.schemas import StringListResponse
+from app.schemas import PaginatedStringListResponse, StringListResponse
 from app.utils import logger
 
 router = APIRouter(dependencies=[Depends(verify_api_key)])
@@ -35,4 +35,29 @@ async def get_trending_artists():
     return {
         "success": True,
         "items": items,
+    }
+
+
+@router.get(
+    "/{artist_id}/top-picks",
+    description="Get top picks for an artist",
+    tags=["artists"],
+    response_model=PaginatedStringListResponse,
+)
+async def get_artist_top_picks(
+    artist_id: str,
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=50),
+):
+    logger.info(f"Getting top picks for artist {artist_id}")
+    all_items = db.get_artist_top_picks(artist_id)
+    total = len(all_items)
+    start = (page - 1) * page_size
+    items = all_items[start : start + page_size]
+    return {
+        "success": True,
+        "items": items,
+        "page": page,
+        "page_size": page_size,
+        "total": total,
     }

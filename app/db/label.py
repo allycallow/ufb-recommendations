@@ -15,3 +15,18 @@ def get_label_related_artists(label_id: str):
         return []
     deserialized = deserialize_dynamodb_item(item)
     return deserialized.get("items", [])
+
+
+def get_label_top_picks(label_id: str):
+    response = dynamodb.get_item(
+        TableName=TABLE_NAME,
+        Key={
+            "PK": {"S": f"LABEL#{label_id}"},
+            "SK": {"S": "TOP_PICKS"},
+        },
+    )
+    item = response.get("Item")
+    if not item:
+        return []
+    deserialized = deserialize_dynamodb_item(item)
+    return deserialized.get("items", [])

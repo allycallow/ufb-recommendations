@@ -30,3 +30,18 @@ def get_trending_artists():
         return []
     deserialized = deserialize_dynamodb_item(item)
     return deserialized.get("items", [])
+
+
+def get_artist_top_picks(artist_id: str):
+    response = dynamodb.get_item(
+        TableName=TABLE_NAME,
+        Key={
+            "PK": {"S": f"ARTIST#{artist_id}"},
+            "SK": {"S": "TOP_PICKS"},
+        },
+    )
+    item = response.get("Item")
+    if not item:
+        return []
+    deserialized = deserialize_dynamodb_item(item)
+    return deserialized.get("items", [])
