@@ -16,6 +16,7 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from app.routers import (
     artist_router,
     label_router,
+    playlist_router,
     release_router,
     track_router,
     user_router,
@@ -88,6 +89,7 @@ app.include_router(artist_router, prefix="/artists", tags=["artists"])
 app.include_router(user_router, prefix="/users", tags=["users"])
 app.include_router(release_router, prefix="/releases", tags=["releases"])
 app.include_router(track_router, prefix="/tracks", tags=["tracks"])
+app.include_router(playlist_router, prefix="/playlists", tags=["playlists"])
 
 # Prometheus Metrics Exposer (Runs cleanly alongside OTel Tracing)
 Instrumentator().instrument(app).expose(app)
