@@ -1,6 +1,3 @@
-Here is the complete, updated markdown content for your CLAUDE.md file. You can copy and paste this directly into your file:
-
-Markdown
 # CLAUDE.md
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
