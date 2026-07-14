@@ -92,4 +92,4 @@ app.include_router(track_router, prefix="/tracks", tags=["tracks"])
 app.include_router(playlist_router, prefix="/playlists", tags=["playlists"])
 
 # Prometheus Metrics Exposer (Runs cleanly alongside OTel Tracing)
-Instrumentator().instrument(app).expose(app)
+Instrumentator().instrument(app, metric_namespace="ufb_recommendations").expose(app)
