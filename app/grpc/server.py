@@ -157,6 +157,7 @@ async def create_grpc_server() -> grpc.aio.Server:
     recommendations_pb2_grpc.add_RecommendationsServiceServicer_to_server(
         RecommendationsServicer(), server
     )
+    logger.info("Registered RecommendationsServiceServicer with gRPC server")
 
     reflection.enable_server_reflection(
         (
@@ -167,6 +168,8 @@ async def create_grpc_server() -> grpc.aio.Server:
         ),
         server,
     )
+    logger.info("gRPC server reflection enabled")
 
     server.add_insecure_port(f"[::]:{GRPC_PORT}")
+    logger.info(f"gRPC server bound to [::]:{GRPC_PORT}")
     return server

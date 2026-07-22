@@ -15,7 +15,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from app.grpc.server import create_grpc_server
+from app.grpc.server import GRPC_PORT, create_grpc_server
 from app.routers import (
     artist_router,
     label_router,
@@ -24,6 +24,7 @@ from app.routers import (
     track_router,
     user_router,
 )
+from app.utils import logger
 
 # ------------------------------
 
@@ -36,13 +37,16 @@ sentry_sdk.init(dsn=SENTRY_DSN, send_default_pii=True, environment=STAGE)
 
 @asynccontextmanager
 async def lifespan(fastapi_app: FastAPI):
+    logger.info(f"Starting gRPC server on port {GRPC_PORT}")
     grpc_server = await create_grpc_server()
     await grpc_server.start()
-    print("gRPC server started.")
+    logger.info("gRPC server started")
 
     yield
 
+    logger.info("Stopping gRPC server")
     await grpc_server.stop(grace=5)
+    logger.info("gRPC server stopped")
 
 
 app = FastAPI(lifespan=lifespan)
@@ -50,6 +54,10 @@ app = FastAPI(lifespan=lifespan)
 
 # --- OpenTelemetry Initialization ---
 def initialize_tracing(fastapi_app: FastAPI):
+    if STAGE == "local":
+        print("Skipping OpenTelemetry tracing initialization (STAGE=local).")
+        return
+
     try:
         # Service name as it will appear inside the Jaeger UI dropdown
         resource = Resource.create(
