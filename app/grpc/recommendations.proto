@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package ufb_recommendations;
+
+import "google/protobuf/struct.proto";
+
+service RecommendationsService {
+  rpc GetArtistRelatedArtists(IdRequest) returns (StringListResponse);
+  rpc GetTrendingArtists(Empty) returns (StringListResponse);
+  rpc GetArtistTopPicks(PaginatedIdRequest) returns (PaginatedStringListResponse);
+
+  rpc GetLabelRelatedArtists(IdRequest) returns (StringListResponse);
+  rpc GetLabelTopPicks(PaginatedIdRequest) returns (PaginatedStringListResponse);
+
+  rpc GetReleaseRecommendations(IdRequest) returns (StringListResponse);
+
+  rpc GetTrendingTracks(Empty) returns (StringListResponse);
+
+  rpc GetPlaylistSuggestedTracks(PaginatedIdRequest) returns (PaginatedStringListResponse);
+
+  rpc GetUserExplore(IdRequest) returns (StructListResponse);
+  rpc GetUserRecommendations(IdRequest) returns (StructListResponse);
+  rpc GetUserMoreLikeRelease(IdRequest) returns (StructListResponse);
+  rpc GetUserMoreLikeArtist(IdRequest) returns (StructListResponse);
+  rpc GetUserTopPicks(IdRequest) returns (StructListResponse);
+}
+
+message Empty {}
+
+message IdRequest {
+  string id = 1;
+}
+
+message PaginatedIdRequest {
+  string id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message StringListResponse {
+  bool success = 1;
+  repeated string items = 2;
+}
+
+message PaginatedStringListResponse {
+  bool success = 1;
+  repeated string items = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+  int32 total = 5;
+}
+
+message StructListResponse {
+  bool success = 1;
+  repeated google.protobuf.Struct items = 2;
+}

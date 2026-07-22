@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from os import getenv
 
 import sentry_sdk
@@ -8,11 +9,13 @@ from fastapi.responses import JSONResponse
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from opentelemetry.instrumentation.grpc import GrpcAioInstrumentorServer
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from prometheus_fastapi_instrumentator import Instrumentator
 
+from app.grpc.server import create_grpc_server
 from app.routers import (
     artist_router,
     label_router,
@@ -30,7 +33,19 @@ STAGE = getenv("STAGE", "local")
 
 sentry_sdk.init(dsn=SENTRY_DSN, send_default_pii=True, environment=STAGE)
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(fastapi_app: FastAPI):
+    grpc_server = await create_grpc_server()
+    await grpc_server.start()
+    print("gRPC server started.")
+
+    yield
+
+    await grpc_server.stop(grace=5)
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 # --- OpenTelemetry Initialization ---
@@ -51,6 +66,11 @@ def initialize_tracing(fastapi_app: FastAPI):
         FastAPIInstrumentor.instrument_app(
             fastapi_app, excluded_urls="metrics,sentry-debug"
         )
+
+        # Patches grpc.aio.server so the gRPC server created in create_grpc_server()
+        # picks up tracing automatically once it starts.
+        GrpcAioInstrumentorServer().instrument()
+
         print("OpenTelemetry tracing successfully initialized for FastAPI.")
     except Exception as e:
         print(f"Failed to initialize OpenTelemetry tracing: {e}")
