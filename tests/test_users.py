@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 
 USER_ID = "user123"
-BASE_URL = f"/users/{USER_ID}"
+BASE_URL = f"/v1/users/{USER_ID}"
 
 ENDPOINTS = [
     f"{BASE_URL}/explore",
@@ -11,6 +11,7 @@ ENDPOINTS = [
     f"{BASE_URL}/more-like-release",
     f"{BASE_URL}/more-like-artist",
     f"{BASE_URL}/top-picks",
+    f"{BASE_URL}/home",
 ]
 
 
@@ -105,17 +106,39 @@ def test_more_like_release_empty(client, auth_headers):
 
 
 def test_more_like_release_with_data(client, auth_headers):
-    items = [
-        {"release_id": "release:abc", "recommendations": ["release:1", "release:2"]},
-        {"release_id": "release:xyz", "recommendations": ["release:3"]},
+    mock_data = [
+        {
+            "id": "6a2d9cd4-35b8-4fbf-903c-367a569ad535",
+            "target_id": "release:abc",
+            "type": "MORE_LIKE_RELEASE",
+            "recommendations": ["release:1", "release:2"],
+            "processed_at": "2026-07-25T09:23:43.618795+00:00",
+        },
+        {
+            "id": "1a6b208b-31d1-42aa-b6ca-24bba6e84b8a",
+            "target_id": "release:xyz",
+            "type": "MORE_LIKE_RELEASE",
+            "recommendations": ["release:3"],
+            "processed_at": "2026-07-25T09:23:43.618795+00:00",
+        },
     ]
-    mock_data = [{"items": items}]
     with patch("app.db.get_more_like_release", return_value=mock_data):
         response = client.get(f"{BASE_URL}/more-like-release", headers=auth_headers)
     assert response.status_code == 200
     data = response.json()
     assert data["success"] is True
-    assert data["items"] == items
+    assert data["items"] == [
+        {
+            "id": "6a2d9cd4-35b8-4fbf-903c-367a569ad535",
+            "target_id": "release:abc",
+            "recommendations": ["release:1", "release:2"],
+        },
+        {
+            "id": "1a6b208b-31d1-42aa-b6ca-24bba6e84b8a",
+            "target_id": "release:xyz",
+            "recommendations": ["release:3"],
+        },
+    ]
 
 
 def test_more_like_artist_empty(client, auth_headers):
@@ -127,17 +150,96 @@ def test_more_like_artist_empty(client, auth_headers):
 
 
 def test_more_like_artist_with_data(client, auth_headers):
-    items = [
-        {"artist_id": "artist:abc", "recommendations": ["release:1", "release:2"]},
-        {"artist_id": "artist:xyz", "recommendations": ["release:3"]},
+    mock_data = [
+        {
+            "id": "6a2d9cd4-35b8-4fbf-903c-367a569ad535",
+            "target_id": "artist:abc",
+            "type": "MORE_LIKE_ARTIST",
+            "recommendations": ["release:1", "release:2"],
+            "processed_at": "2026-07-25T09:23:43.618795+00:00",
+        },
+        {
+            "id": "1a6b208b-31d1-42aa-b6ca-24bba6e84b8a",
+            "target_id": "artist:xyz",
+            "type": "MORE_LIKE_ARTIST",
+            "recommendations": ["release:3"],
+            "processed_at": "2026-07-25T09:23:43.618795+00:00",
+        },
     ]
-    mock_data = [{"items": items}]
     with patch("app.db.get_more_like_artist", return_value=mock_data):
         response = client.get(f"{BASE_URL}/more-like-artist", headers=auth_headers)
     assert response.status_code == 200
     data = response.json()
     assert data["success"] is True
-    assert data["items"] == items
+    assert data["items"] == [
+        {
+            "id": "6a2d9cd4-35b8-4fbf-903c-367a569ad535",
+            "target_id": "artist:abc",
+            "recommendations": ["release:1", "release:2"],
+        },
+        {
+            "id": "1a6b208b-31d1-42aa-b6ca-24bba6e84b8a",
+            "target_id": "artist:xyz",
+            "recommendations": ["release:3"],
+        },
+    ]
+
+
+def test_home_empty(client, auth_headers):
+    with (
+        patch("app.db.get_more_like_release", return_value=[]) as mock_release,
+        patch("app.db.get_more_like_artist", return_value=[]) as mock_artist,
+    ):
+        response = client.get(f"{BASE_URL}/home", headers=auth_headers)
+        mock_release.assert_called_once_with(USER_ID)
+        mock_artist.assert_called_once_with(USER_ID)
+    assert response.status_code == 200
+    assert response.json() == {"success": True, "items": []}
+
+
+def test_home_with_data(client, auth_headers):
+    more_like_release = [
+        {
+            "id": "6a2d9cd4-35b8-4fbf-903c-367a569ad535",
+            "target_id": "release:abc",
+            "type": "MORE_LIKE_RELEASE",
+            "recommendations": ["release:1"],
+        },
+    ]
+    more_like_artist = [
+        {
+            "id": "1a6b208b-31d1-42aa-b6ca-24bba6e84b8a",
+            "target_id": "artist:xyz",
+            "type": "MORE_LIKE_ARTIST",
+            "recommendations": ["release:2"],
+        },
+    ]
+    with (
+        patch("app.db.get_more_like_release", return_value=more_like_release),
+        patch("app.db.get_more_like_artist", return_value=more_like_artist),
+    ):
+        response = client.get(f"{BASE_URL}/home", headers=auth_headers)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["success"] is True
+    assert sorted(data["items"], key=lambda item: item["id"]) == [
+        {
+            "id": "1a6b208b-31d1-42aa-b6ca-24bba6e84b8a",
+            "target_id": "artist:xyz",
+            "type": "MORE_LIKE_ARTIST",
+            "title": None,
+            "subtitle": "More Like",
+            "items": ["release:2"],
+        },
+        {
+            "id": "6a2d9cd4-35b8-4fbf-903c-367a569ad535",
+            "target_id": "release:abc",
+            "type": "MORE_LIKE_RELEASE",
+            "title": None,
+            "subtitle": "More Like",
+            "items": ["release:1"],
+        },
+    ]
 
 
 def test_top_picks_empty(client, auth_headers):

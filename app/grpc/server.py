@@ -7,7 +7,7 @@ from grpc_reflection.v1alpha import reflection
 import app.db as db
 from app.grpc import recommendations_pb2, recommendations_pb2_grpc
 from app.grpc.interceptors import ApiKeyInterceptor
-from app.routers.user import format_recommendation
+from app.routers.user import build_home_sections, format_recommendation
 from app.utils import logger
 
 GRPC_PORT = getenv("GRPC_PORT", "50051")
@@ -99,6 +99,15 @@ class RecommendationsServicer(recommendations_pb2_grpc.RecommendationsServiceSer
             total=total,
         )
 
+    async def GetUserHome(self, request, context):
+        logger.info(f"gRPC getting home feed for user {request.id}")
+        sections = build_home_sections(request.id)
+        if len(sections) == 0:
+            return recommendations_pb2.StructListResponse(success=True, items=[])
+        return recommendations_pb2.StructListResponse(
+            success=True, items=_to_structs(sections)
+        )
+
     async def GetUserExplore(self, request, context):
         logger.info(f"gRPC getting explore recommendations for user {request.id}")
         recommendations = db.get_explore(request.id)
@@ -124,7 +133,14 @@ class RecommendationsServicer(recommendations_pb2_grpc.RecommendationsServiceSer
         recommendations = db.get_more_like_release(request.id)
         if len(recommendations) == 0:
             return recommendations_pb2.StructListResponse(success=True, items=[])
-        items = recommendations[0]["items"]
+        items = [
+            {
+                "id": entry["id"],
+                "target_id": entry["target_id"],
+                "recommendations": entry["recommendations"],
+            }
+            for entry in recommendations
+        ]
         return recommendations_pb2.StructListResponse(
             success=True, items=_to_structs(items)
         )
@@ -136,7 +152,14 @@ class RecommendationsServicer(recommendations_pb2_grpc.RecommendationsServiceSer
         recommendations = db.get_more_like_artist(request.id)
         if len(recommendations) == 0:
             return recommendations_pb2.StructListResponse(success=True, items=[])
-        items = recommendations[0]["items"]
+        items = [
+            {
+                "id": entry["id"],
+                "target_id": entry["target_id"],
+                "recommendations": entry["recommendations"],
+            }
+            for entry in recommendations
+        ]
         return recommendations_pb2.StructListResponse(
             success=True, items=_to_structs(items)
         )

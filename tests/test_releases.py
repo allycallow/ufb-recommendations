@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 RELEASE_ID = "release123"
-BASE_URL = f"/releases/{RELEASE_ID}"
+BASE_URL = f"/v1/releases/{RELEASE_ID}"
 
 
 def test_missing_api_key_returns_403(client):

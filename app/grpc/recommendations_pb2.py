@@ -4,6 +4,7 @@
 # source: recommendations.proto
 # Protobuf Python Version: 7.35.0
 """Generated protocol buffer code."""
+
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import runtime_version as _runtime_version
@@ -20,9 +21,8 @@ _sym_db = _symbol_database.Default()
 
 from google.protobuf import struct_pb2 as google_dot_protobuf_dot_struct__pb2
 
-
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
-    b"\n\x15recommendations.proto\x12\x13ufb_recommendations\x1a\x1cgoogle/protobuf/struct.proto\"\x07\n\x05\x45mpty\"\x17\n\tIdRequest\x12\n\n\x02id\x18\x01 \x01(\t\"A\n\x12PaginatedIdRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04page\x18\x02 \x01(\x05\x12\x11\n\tpage_size\x18\x03 \x01(\x05\"4\n\x12StringListResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\r\n\x05items\x18\x02 \x03(\t\"m\n\x1bPaginatedStringListResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\r\n\x05items\x18\x02 \x03(\t\x12\x0c\n\x04page\x18\x03 \x01(\x05\x12\x11\n\tpage_size\x18\x04 \x01(\x05\x12\r\n\x05total\x18\x05 \x01(\x05\"M\n\x12StructListResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12&\n\x05items\x18\x02 \x03(\x0b\x32\x17.google.protobuf.Struct2\xb1\n\n\x16RecommendationsService\x12\x62\n\x17GetArtistRelatedArtists\x12\x1e.ufb_recommendations.IdRequest\x1a'.ufb_recommendations.StringListResponse\x12Y\n\x12GetTrendingArtists\x12\x1a.ufb_recommendations.Empty\x1a'.ufb_recommendations.StringListResponse\x12n\n\x11GetArtistTopPicks\x12'.ufb_recommendations.PaginatedIdRequest\x1a\x30.ufb_recommendations.PaginatedStringListResponse\x12\x61\n\x16GetLabelRelatedArtists\x12\x1e.ufb_recommendations.IdRequest\x1a'.ufb_recommendations.StringListResponse\x12m\n\x10GetLabelTopPicks\x12'.ufb_recommendations.PaginatedIdRequest\x1a\x30.ufb_recommendations.PaginatedStringListResponse\x12\x64\n\x19GetReleaseRecommendations\x12\x1e.ufb_recommendations.IdRequest\x1a'.ufb_recommendations.StringListResponse\x12X\n\x11GetTrendingTracks\x12\x1a.ufb_recommendations.Empty\x1a'.ufb_recommendations.StringListResponse\x12w\n\x1aGetPlaylistSuggestedTracks\x12'.ufb_recommendations.PaginatedIdRequest\x1a\x30.ufb_recommendations.PaginatedStringListResponse\x12Y\n\x0eGetUserExplore\x12\x1e.ufb_recommendations.IdRequest\x1a'.ufb_recommendations.StructListResponse\x12\x61\n\x16GetUserRecommendations\x12\x1e.ufb_recommendations.IdRequest\x1a'.ufb_recommendations.StructListResponse\x12\x61\n\x16GetUserMoreLikeRelease\x12\x1e.ufb_recommendations.IdRequest\x1a'.ufb_recommendations.StructListResponse\x12`\n\x15GetUserMoreLikeArtist\x12\x1e.ufb_recommendations.IdRequest\x1a'.ufb_recommendations.StructListResponse\x12Z\n\x0fGetUserTopPicks\x12\x1e.ufb_recommendations.IdRequest\x1a'.ufb_recommendations.StructListResponseb\x06proto3"
+    b'\n\x15recommendations.proto\x12\x16ufb_recommendations.v1\x1a\x1cgoogle/protobuf/struct.proto"\x07\n\x05\x45mpty"\x17\n\tIdRequest\x12\n\n\x02id\x18\x01 \x01(\t"A\n\x12PaginatedIdRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04page\x18\x02 \x01(\x05\x12\x11\n\tpage_size\x18\x03 \x01(\x05"4\n\x12StringListResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\r\n\x05items\x18\x02 \x03(\t"m\n\x1bPaginatedStringListResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\r\n\x05items\x18\x02 \x03(\t\x12\x0c\n\x04page\x18\x03 \x01(\x05\x12\x11\n\tpage_size\x18\x04 \x01(\x05\x12\r\n\x05total\x18\x05 \x01(\x05"M\n\x12StructListResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12&\n\x05items\x18\x02 \x03(\x0b\x32\x17.google.protobuf.Struct2\xdd\x0b\n\x16RecommendationsService\x12h\n\x17GetArtistRelatedArtists\x12!.ufb_recommendations.v1.IdRequest\x1a*.ufb_recommendations.v1.StringListResponse\x12_\n\x12GetTrendingArtists\x12\x1d.ufb_recommendations.v1.Empty\x1a*.ufb_recommendations.v1.StringListResponse\x12t\n\x11GetArtistTopPicks\x12*.ufb_recommendations.v1.PaginatedIdRequest\x1a\x33.ufb_recommendations.v1.PaginatedStringListResponse\x12g\n\x16GetLabelRelatedArtists\x12!.ufb_recommendations.v1.IdRequest\x1a*.ufb_recommendations.v1.StringListResponse\x12s\n\x10GetLabelTopPicks\x12*.ufb_recommendations.v1.PaginatedIdRequest\x1a\x33.ufb_recommendations.v1.PaginatedStringListResponse\x12j\n\x19GetReleaseRecommendations\x12!.ufb_recommendations.v1.IdRequest\x1a*.ufb_recommendations.v1.StringListResponse\x12^\n\x11GetTrendingTracks\x12\x1d.ufb_recommendations.v1.Empty\x1a*.ufb_recommendations.v1.StringListResponse\x12}\n\x1aGetPlaylistSuggestedTracks\x12*.ufb_recommendations.v1.PaginatedIdRequest\x1a\x33.ufb_recommendations.v1.PaginatedStringListResponse\x12\\\n\x0bGetUserHome\x12!.ufb_recommendations.v1.IdRequest\x1a*.ufb_recommendations.v1.StructListResponse\x12_\n\x0eGetUserExplore\x12!.ufb_recommendations.v1.IdRequest\x1a*.ufb_recommendations.v1.StructListResponse\x12g\n\x16GetUserRecommendations\x12!.ufb_recommendations.v1.IdRequest\x1a*.ufb_recommendations.v1.StructListResponse\x12g\n\x16GetUserMoreLikeRelease\x12!.ufb_recommendations.v1.IdRequest\x1a*.ufb_recommendations.v1.StructListResponse\x12\x66\n\x15GetUserMoreLikeArtist\x12!.ufb_recommendations.v1.IdRequest\x1a*.ufb_recommendations.v1.StructListResponse\x12`\n\x0fGetUserTopPicks\x12!.ufb_recommendations.v1.IdRequest\x1a*.ufb_recommendations.v1.StructListResponseb\x06proto3'
 )
 
 _globals = globals()
@@ -30,18 +30,18 @@ _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, "recommendations_pb2", _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
     DESCRIPTOR._loaded_options = None
-    _globals["_EMPTY"]._serialized_start = 76
-    _globals["_EMPTY"]._serialized_end = 83
-    _globals["_IDREQUEST"]._serialized_start = 85
-    _globals["_IDREQUEST"]._serialized_end = 108
-    _globals["_PAGINATEDIDREQUEST"]._serialized_start = 110
-    _globals["_PAGINATEDIDREQUEST"]._serialized_end = 175
-    _globals["_STRINGLISTRESPONSE"]._serialized_start = 177
-    _globals["_STRINGLISTRESPONSE"]._serialized_end = 229
-    _globals["_PAGINATEDSTRINGLISTRESPONSE"]._serialized_start = 231
-    _globals["_PAGINATEDSTRINGLISTRESPONSE"]._serialized_end = 340
-    _globals["_STRUCTLISTRESPONSE"]._serialized_start = 342
-    _globals["_STRUCTLISTRESPONSE"]._serialized_end = 419
-    _globals["_RECOMMENDATIONSSERVICE"]._serialized_start = 422
-    _globals["_RECOMMENDATIONSSERVICE"]._serialized_end = 1751
+    _globals["_EMPTY"]._serialized_start = 79
+    _globals["_EMPTY"]._serialized_end = 86
+    _globals["_IDREQUEST"]._serialized_start = 88
+    _globals["_IDREQUEST"]._serialized_end = 111
+    _globals["_PAGINATEDIDREQUEST"]._serialized_start = 113
+    _globals["_PAGINATEDIDREQUEST"]._serialized_end = 178
+    _globals["_STRINGLISTRESPONSE"]._serialized_start = 180
+    _globals["_STRINGLISTRESPONSE"]._serialized_end = 232
+    _globals["_PAGINATEDSTRINGLISTRESPONSE"]._serialized_start = 234
+    _globals["_PAGINATEDSTRINGLISTRESPONSE"]._serialized_end = 343
+    _globals["_STRUCTLISTRESPONSE"]._serialized_start = 345
+    _globals["_STRUCTLISTRESPONSE"]._serialized_end = 422
+    _globals["_RECOMMENDATIONSSERVICE"]._serialized_start = 425
+    _globals["_RECOMMENDATIONSSERVICE"]._serialized_end = 1926
 # @@protoc_insertion_point(module_scope)

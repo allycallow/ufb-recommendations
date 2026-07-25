@@ -1,8 +1,8 @@
 from unittest.mock import patch
 
 ARTIST_ID = "artist123"
-BASE_URL = f"/artists/{ARTIST_ID}"
-TRENDING_URL = "/artists/trending"
+BASE_URL = f"/v1/artists/{ARTIST_ID}"
+TRENDING_URL = "/v1/artists/trending"
 TOP_PICKS_URL = f"{BASE_URL}/top-picks"
 
 

@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from os import getenv
 
 import sentry_sdk
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import APIRouter, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 # --- OpenTelemetry Imports ---
@@ -114,12 +114,14 @@ async def trigger_error():
 
 
 # Application Routers
-app.include_router(label_router, prefix="/labels", tags=["labels"])
-app.include_router(artist_router, prefix="/artists", tags=["artists"])
-app.include_router(user_router, prefix="/users", tags=["users"])
-app.include_router(release_router, prefix="/releases", tags=["releases"])
-app.include_router(track_router, prefix="/tracks", tags=["tracks"])
-app.include_router(playlist_router, prefix="/playlists", tags=["playlists"])
+v1_router = APIRouter(prefix="/v1")
+v1_router.include_router(label_router, prefix="/labels", tags=["labels"])
+v1_router.include_router(artist_router, prefix="/artists", tags=["artists"])
+v1_router.include_router(user_router, prefix="/users", tags=["users"])
+v1_router.include_router(release_router, prefix="/releases", tags=["releases"])
+v1_router.include_router(track_router, prefix="/tracks", tags=["tracks"])
+v1_router.include_router(playlist_router, prefix="/playlists", tags=["playlists"])
+app.include_router(v1_router)
 
 # Prometheus Metrics Exposer (Runs cleanly alongside OTel Tracing)
 Instrumentator().instrument(app, metric_namespace="ufb_recommendations").expose(app)

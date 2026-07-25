@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 LABEL_ID = "label123"
-BASE_URL = f"/labels/{LABEL_ID}"
+BASE_URL = f"/v1/labels/{LABEL_ID}"
 TOP_PICKS_URL = f"{BASE_URL}/top-picks"
 
 

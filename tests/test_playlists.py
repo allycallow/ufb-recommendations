@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 PLAYLIST_ID = "f10fda15-5b97-4ba3-b5aa-54f133bce41d"
-BASE_URL = f"/playlists/{PLAYLIST_ID}"
+BASE_URL = f"/v1/playlists/{PLAYLIST_ID}"
 SUGGESTED_TRACKS_URL = f"{BASE_URL}/suggested-tracks"
 
 

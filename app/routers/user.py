@@ -1,8 +1,11 @@
+import random
+
 from fastapi import APIRouter, Depends
 
 import app.db as db
 from app.auth import verify_api_key
 from app.schemas import (
+    HomeResponse,
     MoreLikeArtistResponse,
     MoreLikeReleaseResponse,
     RecommendationListResponse,
@@ -25,6 +28,37 @@ def format_recommendation(recommendations):
     formatted = [format_item(item) for item in recommendations]
     formatted.sort(key=lambda x: x.get("is_hero", 0), reverse=True)
     return formatted
+
+
+def build_home_sections(user_id: str):
+    sections = []
+
+    more_like_release = db.get_more_like_release(user_id)
+    for entry in more_like_release:
+        sections.append(
+            {
+                "id": entry["id"],
+                "target_id": entry["target_id"],
+                "type": entry["type"],
+                "subtitle": "More Like",
+                "items": entry["recommendations"],
+            }
+        )
+
+    more_like_artist = db.get_more_like_artist(user_id)
+    for entry in more_like_artist:
+        sections.append(
+            {
+                "id": entry["id"],
+                "target_id": entry["target_id"],
+                "type": entry["type"],
+                "subtitle": "More Like",
+                "items": entry["recommendations"],
+            }
+        )
+
+    random.shuffle(sections)
+    return sections
 
 
 @router.get(
@@ -78,12 +112,14 @@ async def get_user_recommendations(user_id: str):
 async def get_user_more_like_release(user_id: str):
     logger.info(f"Getting more like this release recommendations for user {user_id}")
     recommendations = db.get_more_like_release(user_id)
-    if len(recommendations) == 0:
-        return {
-            "success": True,
-            "items": [],
+    items = [
+        {
+            "id": entry["id"],
+            "target_id": entry["target_id"],
+            "recommendations": entry["recommendations"],
         }
-    items = recommendations[0]["items"]
+        for entry in recommendations
+    ]
     return {
         "success": True,
         "items": items,
@@ -99,15 +135,32 @@ async def get_user_more_like_release(user_id: str):
 async def get_user_more_like_artist(user_id: str):
     logger.info(f"Getting more like this artist recommendations for user {user_id}")
     recommendations = db.get_more_like_artist(user_id)
-    if len(recommendations) == 0:
-        return {
-            "success": True,
-            "items": [],
+    items = [
+        {
+            "id": entry["id"],
+            "target_id": entry["target_id"],
+            "recommendations": entry["recommendations"],
         }
-    items = recommendations[0]["items"]
+        for entry in recommendations
+    ]
     return {
         "success": True,
         "items": items,
+    }
+
+
+@router.get(
+    "/{user_id}/home",
+    description="Get home feed for a user, combining more-like-release and "
+    "more-like-artist recommendations",
+    tags=["users"],
+    response_model=HomeResponse,
+)
+async def get_user_home(user_id: str):
+    logger.info(f"Getting home feed for user {user_id}")
+    return {
+        "success": True,
+        "items": build_home_sections(user_id),
     }
 
 

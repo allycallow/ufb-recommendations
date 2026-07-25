@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-BASE_URL = "/tracks"
+BASE_URL = "/v1/tracks"
 
 
 def test_missing_api_key_returns_403(client):

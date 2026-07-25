@@ -45,7 +45,8 @@ class TypedListResponse(BaseModel):
 
 
 class MoreLikeArtistItem(BaseModel):
-    artist_id: str
+    id: str
+    target_id: str
     recommendations: list[str]
 
 
@@ -55,7 +56,8 @@ class MoreLikeArtistResponse(BaseModel):
 
 
 class MoreLikeReleaseItem(BaseModel):
-    release_id: str
+    id: str
+    target_id: str
     recommendations: list[str]
 
 
@@ -70,3 +72,17 @@ class PaginatedStringListResponse(BaseModel):
     page: int
     page_size: int
     total: int
+
+
+class HomeSection(BaseModel):
+    id: str
+    target_id: str
+    type: str
+    title: Optional[str] = None
+    subtitle: Optional[str] = None
+    items: list[str]
+
+
+class HomeResponse(BaseModel):
+    success: bool
+    items: list[HomeSection]
