@@ -6,12 +6,9 @@ def get_recommendations(user_id: str):
     response = dynamodb.query(
         TableName=TABLE_NAME,
         KeyConditionExpression="#pk = :pk And begins_with(#sk, :sk)",
-        FilterExpression="NOT begins_with(#sk, :artist_sk) AND NOT begins_with(#sk, :release_sk)",
         ExpressionAttributeValues={
             ":pk": {"S": f"USER#{user_id}"},
             ":sk": {"S": "RECOMMENDATION#"},
-            ":artist_sk": {"S": "RECOMMENDATION#ARTIST#"},
-            ":release_sk": {"S": "RECOMMENDATION#RELEASE#"},
         },
         ExpressionAttributeNames={
             "#pk": "PK",
@@ -19,7 +16,12 @@ def get_recommendations(user_id: str):
         },
     )
     items = response.get("Items", [])
-    return [deserialize_dynamodb_item(item) for item in items]
+    return [
+        deserialize_dynamodb_item(item)
+        for item in items
+        if not item["SK"]["S"].startswith("RECOMMENDATION#ARTIST#")
+        and not item["SK"]["S"].startswith("RECOMMENDATION#RELEASE#")
+    ]
 
 
 def get_more_like_artist(user_id: str):
@@ -60,12 +62,9 @@ def get_explore(user_id: str):
     response = dynamodb.query(
         TableName=TABLE_NAME,
         KeyConditionExpression="#pk = :pk And begins_with(#sk, :sk)",
-        FilterExpression="NOT begins_with(#sk, :artist_sk) AND NOT begins_with(#sk, :release_sk)",
         ExpressionAttributeValues={
             ":pk": {"S": f"USER#{user_id}"},
             ":sk": {"S": "RECOMMENDATION#"},
-            ":artist_sk": {"S": "RECOMMENDATION#ARTIST#"},
-            ":release_sk": {"S": "RECOMMENDATION#RELEASE#"},
         },
         ExpressionAttributeNames={
             "#pk": "PK",
@@ -73,7 +72,12 @@ def get_explore(user_id: str):
         },
     )
     items = response.get("Items", [])
-    return [deserialize_dynamodb_item(item) for item in items]
+    return [
+        deserialize_dynamodb_item(item)
+        for item in items
+        if not item["SK"]["S"].startswith("RECOMMENDATION#ARTIST#")
+        and not item["SK"]["S"].startswith("RECOMMENDATION#RELEASE#")
+    ]
 
 
 def get_top_picks(user_id: str):
