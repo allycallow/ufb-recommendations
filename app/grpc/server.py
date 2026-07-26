@@ -6,7 +6,7 @@ from grpc_reflection.v1alpha import reflection
 
 import app.db as db
 from app.grpc import recommendations_pb2, recommendations_pb2_grpc
-from app.grpc.interceptors import ApiKeyInterceptor
+from app.grpc.interceptors import ApiKeyInterceptor, PrometheusServerInterceptor
 from app.routers.user import build_home_sections, format_recommendation
 from app.utils import logger
 
@@ -176,7 +176,9 @@ class RecommendationsServicer(recommendations_pb2_grpc.RecommendationsServiceSer
 
 
 async def create_grpc_server() -> grpc.aio.Server:
-    server = grpc.aio.server(interceptors=[ApiKeyInterceptor()])
+    server = grpc.aio.server(
+        interceptors=[PrometheusServerInterceptor(), ApiKeyInterceptor()]
+    )
     recommendations_pb2_grpc.add_RecommendationsServiceServicer_to_server(
         RecommendationsServicer(), server
     )
