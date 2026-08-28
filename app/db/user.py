@@ -58,6 +58,23 @@ def get_more_like_release(user_id: str):
     return [deserialize_dynamodb_item(item) for item in items]
 
 
+def get_home_feed(user_id: str):
+    response = dynamodb.query(
+        TableName=TABLE_NAME,
+        KeyConditionExpression="#pk = :pk And begins_with(#sk, :sk)",
+        ExpressionAttributeValues={
+            ":pk": {"S": f"USER#{user_id}"},
+            ":sk": {"S": "HOME_FEED#"},
+        },
+        ExpressionAttributeNames={
+            "#pk": "PK",
+            "#sk": "SK",
+        },
+    )
+    items = response.get("Items", [])
+    return [deserialize_dynamodb_item(item) for item in items]
+
+
 def get_explore(user_id: str):
     response = dynamodb.query(
         TableName=TABLE_NAME,

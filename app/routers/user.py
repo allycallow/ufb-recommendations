@@ -31,11 +31,13 @@ def format_recommendation(recommendations):
 
 
 def build_home_sections(user_id: str):
-    sections = []
+    sections = db.get_home_feed(user_id)
+
+    more_like_sections = []
 
     more_like_release = db.get_more_like_release(user_id)
     for entry in more_like_release:
-        sections.append(
+        more_like_sections.append(
             {
                 "id": entry["id"],
                 "target_id": entry["target_id"],
@@ -47,7 +49,7 @@ def build_home_sections(user_id: str):
 
     more_like_artist = db.get_more_like_artist(user_id)
     for entry in more_like_artist:
-        sections.append(
+        more_like_sections.append(
             {
                 "id": entry["id"],
                 "target_id": entry["target_id"],
@@ -57,8 +59,8 @@ def build_home_sections(user_id: str):
             }
         )
 
-    random.shuffle(sections)
-    return sections
+    random.shuffle(more_like_sections)
+    return sections + more_like_sections
 
 
 @router.get(
