@@ -72,7 +72,14 @@ def get_home_feed(user_id: str):
         },
     )
     items = response.get("Items", [])
-    return [deserialize_dynamodb_item(item) for item in items]
+    return [
+        {
+            k: v
+            for k, v in deserialize_dynamodb_item(item).items()
+            if k not in ("PK", "SK")
+        }
+        for item in items
+    ]
 
 
 def get_explore(user_id: str):

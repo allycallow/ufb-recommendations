@@ -79,7 +79,7 @@ class RecommendationsServicer(recommendations_pb2_grpc.RecommendationsServiceSer
         recommendations = db.get_release_recommendations(request.id)
         if len(recommendations) == 0:
             return recommendations_pb2.StringListResponse(success=True, items=[])
-        items = recommendations[0]["items"]["SS"]
+        items = recommendations[0]["items"]
         return recommendations_pb2.StringListResponse(success=True, items=items)
 
     async def GetTrendingTracks(self, request, context):
